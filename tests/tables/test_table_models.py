@@ -1,7 +1,7 @@
 import pytest
 
-from exceptions.domain import StateError
-from tables.models import Table
+from src.exceptions.domain import StateError
+from src.tables.models import Table
 
 
 def test_table_occupy_and_release() -> None:
