@@ -7,6 +7,7 @@ plus any unexpected exception to prevent system crashes.
 """
 
 import logging
+from decimal import Decimal
 from typing import Callable, Optional
 
 
@@ -17,7 +18,7 @@ from src.orders.services import OrderService
 from src.orders.states import OrderState
 from src.orders.validators import parse_order_state
 from src.tables.services import TableService
-from src.utils.parsing import parse_float, parse_int
+from src.utils.parsing import parse_decimal, parse_int
 from src.validators.common import validate_int_range, validate_non_empty_str
 from src.waiters.services import WaiterService
 from src.customers.services import CustomerService
@@ -260,8 +261,8 @@ class MenuController:
                 continue
             name = self._read_str("Nombre del ítem: ", min_len=1, max_len=60)
             quantity = self._read_int("Cantidad: ", min_value=1, max_value=99)
-            price = self._read_float("Precio unitario: ", min_value=0.01,
-                                     max_value=9999.99)
+            price = self._read_decimal("Precio unitario: ", min_value=Decimal("0.01"),
+                                       max_value=Decimal("9999.99"))
             try:
                 self._order_service.add_item(order_id, name, quantity, price)
                 views.print_success("Ítem agregado.")
@@ -325,16 +326,16 @@ class MenuController:
             except ValidationError as exc:
                 views.print_error(str(exc))
 
-    def _read_float(self, prompt: str, min_value: float = 0.01,
-                    max_value: float = 9999.99) -> float:
-        """Read a validated float from stdin, retrying on error."""
+    def _read_decimal(self, prompt: str, min_value: Decimal = Decimal("0.01"),
+                    max_value: Decimal = Decimal("9999.99")) -> Decimal:
+        """Read a validated Decimal from stdin, retrying on error."""
         while True:
             try:
                 raw = input(prompt)
             except EOFError:
                 raise KeyboardInterrupt from None
             try:
-                value = parse_float(raw, "Monto")
+                value = parse_decimal(raw, "Monto")
                 if value < min_value or value > max_value:
                     raise ValidationError(
                         f"Monto debe estar entre {min_value} y {max_value}."

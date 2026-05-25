@@ -1,5 +1,6 @@
 """Tests for common/shared validators using PE and AVL."""
 import pytest
+from decimal import Decimal
 from src.exceptions.validation import ValidationError
 from src.validators.common import (validate_non_empty_str, validate_phone,
                                 validate_price, validate_positive_int)
@@ -43,12 +44,12 @@ def test_validate_phone_digits_only() -> None:
 
 def test_validate_price_bounds() -> None:
     """AVL: Verificación de precios positivos y límites mínimos."""
-    assert validate_price(10.5, "Precio") == 10.5
-    assert validate_price(0.01, "Precio") == 0.01
+    assert validate_price(Decimal("10.50"), "Precio") == Decimal("10.50")
+    assert validate_price(Decimal("0.01"), "Precio") == Decimal("0.01")
     with pytest.raises(ValidationError):
-        validate_price(0.0, "Precio")
+        validate_price(Decimal("0.00"), "Precio")
     with pytest.raises(ValidationError):
-        validate_price(-1.0, "Precio")
+        validate_price(Decimal("-1.00"), "Precio")
 
 def test_validate_positive_int_bounds() -> None:
     """AVL: Verificación de enteros positivos."""

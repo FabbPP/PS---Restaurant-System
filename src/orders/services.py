@@ -1,7 +1,7 @@
 """Order services (use cases)."""
 
 from typing import List, Optional
-
+from decimal import Decimal
 
 from src.delivery.services import DeliveryService
 from src.exceptions.domain import ConflictError, StateError
@@ -86,7 +86,7 @@ class OrderService:
         return order
 
     def add_item(self, order_id: int, name: str, quantity: int,
-                 unit_price: float) -> Order:
+                 unit_price: Decimal) -> Order:
         """Add an item to an order."""
         order = self.get_order(order_id)
         item = OrderItem(name=name, quantity=quantity, unit_price=unit_price)
@@ -115,7 +115,7 @@ class OrderService:
             self._table_service.release_table(order.table_id)
         return order
 
-    def calculate_total(self, order_id: int) -> float:
+    def calculate_total(self, order_id: int) -> Decimal:
         """Calculate total amount for an order."""
         order = self.get_order(order_id)
         return order.total()

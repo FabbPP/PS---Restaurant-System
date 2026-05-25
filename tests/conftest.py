@@ -68,7 +68,7 @@ def valid_table() -> Table:
 @pytest.fixture
 def valid_order_item() -> OrderItem:
     """Returns a valid OrderItem (PE: Standard valid class)."""
-    return OrderItem(name="Pizza Margarita", quantity=2, unit_price=15.50)
+    return OrderItem(name="Pizza Margarita", quantity=2, unit_price=Decimal("15.50"))
 
 @pytest.fixture
 def pending_dine_in_order() -> Order:
@@ -104,13 +104,13 @@ def raw_data_pe_avl() -> Dict[str, Any]:
             "invalid_type": "cinco"        # PE: Wrong Type
         },
         "prices": {
-            "valid": 25.50,
-            "boundary_min": 0.01,          # AVL: Minimum positive
-            "boundary_max": 9999.99,       # AVL: Logical Max
-            "invalid_zero": 0.00,          # PE: Zero price
-            "invalid_negative": -0.01,     # PE: Negative
-            "invalid_inf": float('inf'),   # Robustness: Infinity
-            "invalid_nan": float('nan')    # Robustness: Not a Number
+            "valid": Decimal("25.50"),
+            "boundary_min": Decimal("0.01"),          # AVL: Minimum positive
+            "boundary_max": Decimal("9999.99"),       # AVL: Logical Max
+            "invalid_zero": Decimal("0.00"),          # PE: Zero price
+            "invalid_negative": Decimal("-0.01"),     # PE: Negative
+            "invalid_inf": Decimal('Infinity'),       # Robustness: Infinity
+            "invalid_nan": Decimal('NaN')             # Robustness: Not a Number
         },
         "ids": {
             "valid": 1,

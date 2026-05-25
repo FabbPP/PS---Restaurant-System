@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-import math
+from decimal import Decimal, InvalidOperation
 from typing import Optional
 
 from src.exceptions.validation import ValidationError
@@ -71,32 +71,26 @@ def validate_positive_int(value: object, field_name: str, min_value: int = 1,
                               max_value=max_value)
 
 
-def validate_price(value: object, field_name: str, min_value: float = 0.01,
-                   max_value: float = 9999.99) -> float:
+def validate_price(value: object, field_name: str, 
+                   min_value: Decimal = Decimal("0.01"),
+                   max_value: Decimal = Decimal("9999.99")) -> Decimal:
     """Validate a price within bounds and ensure finite numeric input."""
-    if isinstance(value, bool) or not isinstance(value, (int, float)):
+    if isinstance(value, bool) or not isinstance(value, (int, float, Decimal, str)):
         raise ValidationError(f"{field_name} debe ser numérico.")
-    if isinstance(min_value, bool) or not isinstance(min_value, (int, float)):
-        raise ValidationError(f"Límite mínimo de {field_name} inválido.")
-    if isinstance(max_value, bool) or not isinstance(max_value, (int, float)):
-        raise ValidationError(f"Límite máximo de {field_name} inválido.")
 
-    parsed_value = float(value)
-    parsed_min = float(min_value)
-    parsed_max = float(max_value)
+    try:
+        parsed_value = Decimal(str(value)) if not isinstance(value, str) else Decimal(value.replace(",", "."))
+    except (InvalidOperation, ValueError):
+        raise ValidationError(f"{field_name} debe ser un número válido.")
 
-    ensure(math.isfinite(parsed_value), f"{field_name} debe ser finito.")
-    ensure(math.isfinite(parsed_min),
-           f"Límite mínimo de {field_name} debe ser finito.")
-    ensure(math.isfinite(parsed_max),
-           f"Límite máximo de {field_name} debe ser finito.")
-    ensure(parsed_min <= parsed_max,
+    ensure(parsed_value.is_finite(), f"{field_name} debe ser finito.")
+    ensure(min_value <= max_value,
            f"Rango inválido para {field_name}: mínimo mayor a máximo.")
-    ensure(parsed_value >= parsed_min,
-           f"{field_name} debe ser >= {parsed_min}.")
-    ensure(parsed_value <= parsed_max,
-           f"{field_name} debe ser <= {parsed_max}.")
-    return round(parsed_value, 2)
+    ensure(parsed_value >= min_value,
+           f"{field_name} debe ser >= {min_value}.")
+    ensure(parsed_value <= max_value,
+           f"{field_name} debe ser <= {max_value}.")
+    return parsed_value.quantize(Decimal("0.00"))
 
 
 def validate_phone(value: object, field_name: str = "Teléfono",

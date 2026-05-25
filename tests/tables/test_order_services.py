@@ -1,6 +1,7 @@
 """Integration tests for OrderService state machine and business logic."""
 
 import pytest
+from decimal import Decimal
 from src.orders.services import OrderService
 from src.orders.states import OrderState
 from src.exceptions.domain import StateError, NotFoundError, ConflictError
@@ -67,7 +68,7 @@ def test_close_order_and_release_table(order_service: OrderService, table_servic
     """PE: Al cerrar una orden de mesa, la mesa debe liberarse."""
     table = table_service.add_table()
     order = order_service.create_dine_in_order(table.id)
-    order_service.add_item(order.id, "Pasta", 1, 20.0)
+    order_service.add_item(order.id, "Pasta", 1, Decimal("20.00"))
     
     # Avanzar a estado final para permitir cierre
     order_service.change_state(order.id, OrderState.PREPARING)

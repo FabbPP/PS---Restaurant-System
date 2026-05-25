@@ -3,6 +3,7 @@
 from dataclasses import dataclass, field
 from enum import Enum
 from typing import List, Optional
+from decimal import Decimal
 
 
 from src.delivery.models import DeliveryInfo
@@ -27,7 +28,7 @@ class OrderItem:
 
     name: str
     quantity: int
-    unit_price: float
+    unit_price: Decimal
 
     def __post_init__(self) -> None:
         self.name = validate_non_empty_str(self.name, "Nombre del ítem",
@@ -36,9 +37,9 @@ class OrderItem:
                                               min_value=1, max_value=99)
         self.unit_price = validate_price(self.unit_price, "Precio unitario")
 
-    def subtotal(self) -> float:
+    def subtotal(self) -> Decimal:
         """Compute subtotal for the item."""
-        return round(self.quantity * self.unit_price, 2)
+        return Decimal(self.quantity) * self.unit_price
 
 
 @dataclass
@@ -123,9 +124,9 @@ class Order:
             raise StateError("No se pueden agregar ítems a una orden finalizada.")
         self.items.append(item)
 
-    def total(self) -> float:
+    def total(self) -> Decimal:
         """Calculate the total amount."""
-        return round(sum(item.subtotal() for item in self.items), 2)
+        return sum((item.subtotal() for item in self.items), Decimal("0.00"))
 
     def set_state(self, new_state: OrderState) -> None:
         """Change order state with validation."""

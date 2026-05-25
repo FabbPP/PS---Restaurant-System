@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-import math
+from decimal import Decimal, InvalidOperation
 from src.exceptions.validation import ValidationError
 
 def parse_int(value: object, field_name: str) -> int:
@@ -27,14 +27,14 @@ def parse_int(value: object, field_name: str) -> int:
         raise ValidationError(f"{field_name} debe ser un número entero.") from exc
 
 
-def parse_float(value: object, field_name: str) -> float:
-    """Parse a float from text or numeric input."""
+def parse_decimal(value: object, field_name: str) -> Decimal:
+    """Parse a Decimal from text or numeric input."""
     if isinstance(value, bool):
         raise ValidationError(f"{field_name} debe ser un número válido.")
 
-    parsed: float
-    if isinstance(value, (int, float)):
-        parsed = float(value)
+    parsed: Decimal
+    if isinstance(value, (int, float, Decimal)):
+        parsed = Decimal(str(value))
     elif isinstance(value, str):
         text = value.strip()
         if text == "":
@@ -42,14 +42,14 @@ def parse_float(value: object, field_name: str) -> float:
 
         normalized = text.replace(",", ".")
         try:
-            parsed = float(normalized)
-        except ValueError as exc:
+            parsed = Decimal(normalized)
+        except (InvalidOperation, ValueError) as exc:
             raise ValidationError(
                 f"{field_name} debe ser un número válido."
             ) from exc
     else:
         raise ValidationError(f"{field_name} debe ser texto o numérico.")
 
-    if not math.isfinite(parsed):
+    if not parsed.is_finite():
         raise ValidationError(f"{field_name} debe ser un número finito.")
     return parsed
