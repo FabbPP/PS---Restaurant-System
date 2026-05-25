@@ -1,9 +1,9 @@
 """Delivery services (use cases)."""
 
-from customers.services import CustomerService
-from delivery.models import DeliveryInfo
-from delivery.validators import validate_address, validate_delivery_phone
-from validators.common import validate_id
+from src.customers.services import CustomerService
+from src.delivery.models import DeliveryInfo
+from src.delivery.validators import validate_address, validate_delivery_phone
+from src.validators.common import validate_id
 
 
 class DeliveryService:

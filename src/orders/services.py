@@ -2,14 +2,14 @@
 
 from typing import List, Optional
 
-from delivery.services import DeliveryService
-from exceptions.domain import ConflictError, StateError
-from orders.models import Order, OrderItem, OrderType
-from orders.repository import OrderRepository
-from orders.states import OrderState
-from orders.validators import validate_state_value
-from tables.services import TableService
-from validators.common import validate_id
+
+from src.delivery.services import DeliveryService
+from src.exceptions.domain import ConflictError, StateError
+from src.orders.models import Order, OrderItem, OrderType
+from src.orders.states import OrderState
+from src.tables.services import TableService
+from src.validators.common import validate_id
+from src.orders.repository import OrderRepository
 
 
 class OrderService:
