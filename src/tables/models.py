@@ -2,8 +2,8 @@
 
 from dataclasses import dataclass
 
-from exceptions.domain import StateError
-from validators.common import validate_id
+from src.exceptions.domain import StateError
+from src.validators.common import validate_id
 
 
 @dataclass

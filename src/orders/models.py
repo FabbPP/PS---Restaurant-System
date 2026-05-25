@@ -4,12 +4,13 @@ from dataclasses import dataclass, field
 from enum import Enum
 from typing import List, Optional
 
-from delivery.models import DeliveryInfo
-from exceptions.domain import StateError
-from exceptions.validation import ValidationError
-from orders.states import OrderState, ensure_transition
-from validators.common import (validate_id, validate_non_empty_str,
-                               validate_positive_int, validate_price)
+
+from src.delivery.models import DeliveryInfo
+from src.exceptions.domain import StateError
+from src.exceptions.validation import ValidationError
+from src.orders.states import OrderState, ensure_transition
+from src.validators.common import (validate_id, validate_non_empty_str,
+                                   validate_positive_int, validate_price)
 
 
 class OrderType(str, Enum):

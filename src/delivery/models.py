@@ -2,7 +2,7 @@
 
 from dataclasses import dataclass
 
-from validators.common import validate_id, validate_non_empty_str, validate_phone
+from src.validators.common import validate_id, validate_non_empty_str, validate_phone
 
 
 @dataclass

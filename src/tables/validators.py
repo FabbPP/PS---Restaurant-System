@@ -1,6 +1,6 @@
 """Table-specific validators."""
 
-from validators.common import validate_id
+from src.validators.common import validate_id
 
 
 def validate_table_id(table_id: int) -> int:

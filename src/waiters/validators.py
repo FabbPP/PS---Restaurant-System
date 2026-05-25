@@ -1,6 +1,6 @@
 """Waiter validators."""
 
-from validators.common import validate_non_empty_str
+from src.validators.common import validate_non_empty_str
 
 
 def validate_waiter_name(name: str) -> str:
