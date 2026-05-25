@@ -2,11 +2,19 @@
 import pytest
 from src.exceptions.validation import ValidationError
 from src.validators.common import validate_non_empty_str
+from src.waiters.validators import validate_waiter_name
 
 def test_waiter_name_valid() -> None:
     """PE: Nombre estándar válido."""
     name = "Juan Perez"
-    assert validate_non_empty_str(name, "Nombre") == name
+    # Verificamos tanto la limpieza de espacios como la validación de caracteres
+    cleansed = validate_non_empty_str(name, "Nombre")
+    assert validate_waiter_name(cleansed) == name
+
+def test_waiter_name_with_numbers() -> None:
+    """CP-1.01: Validar rechazo de nombres que contengan caracteres numéricos."""
+    with pytest.raises(ValidationError, match="solo debe contener letras y espacios"):
+        validate_waiter_name("Luis123")
 
 @pytest.mark.parametrize("invalid_name", [
     "",             # PE: Vacío
