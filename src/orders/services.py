@@ -8,6 +8,7 @@ from src.exceptions.domain import ConflictError, StateError
 from src.orders.models import Order, OrderItem, OrderType
 from src.orders.states import OrderState
 from src.tables.services import TableService
+from src.orders.validators import validate_state_value
 from src.validators.common import validate_id
 from src.orders.repository import OrderRepository
 

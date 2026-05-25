@@ -1,7 +1,6 @@
 """ID generator utility."""
 
-from exceptions.validation import ValidationError
-
+from src.exceptions.validation import ValidationError
 
 class IdGenerator:
     """Simple incremental ID generator."""

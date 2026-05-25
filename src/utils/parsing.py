@@ -18,6 +18,9 @@ def parse_int(value: object, field_name: str) -> int:
     if text == "":
         raise ValidationError(f"{field_name} es obligatorio.")
 
+    if len(text) > 1000:
+        raise ValidationError(f"{field_name} es demasiado largo.")
+
     try:
         return int(text)
     except ValueError as exc:

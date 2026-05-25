@@ -9,6 +9,9 @@ from src.orders.states import OrderState
 from src.orders.repository import OrderRepository
 from src.orders.services import OrderService
 from src.tables.models import Table
+from src.tables.repository import TableRepository
+from src.waiters.repository import WaiterRepository
+from src.customers.repository import CustomerRepository
 from src.tables.services import TableService
 from src.waiters.services import WaiterService
 from src.customers.services import CustomerService
@@ -26,24 +29,23 @@ def order_repository() -> OrderRepository:
 @pytest.fixture
 def table_service() -> TableService:
     """Provides a table service. 
-    Note: Assumes TableService uses an internal repository or mock."""
-    # En una implementación real, aquí inyectaríamos el repositorio de mesas
-    return TableService()
+    Inyectamos un TableRepository real para las pruebas."""
+    return TableService(TableRepository())
 
 @pytest.fixture
 def waiter_service() -> WaiterService:
     """Provides a waiter service."""
-    return WaiterService()
+    return WaiterService(WaiterRepository())
 
 @pytest.fixture
 def customer_service() -> CustomerService:
     """Provides a customer service."""
-    return CustomerService()
+    return CustomerService(CustomerRepository())
 
 @pytest.fixture
-def delivery_service() -> DeliveryService:
+def delivery_service(customer_service) -> DeliveryService:
     """Provides a delivery service."""
-    return DeliveryService()
+    return DeliveryService(customer_service)
 
 @pytest.fixture
 def order_service(order_repository, table_service, delivery_service) -> OrderService:

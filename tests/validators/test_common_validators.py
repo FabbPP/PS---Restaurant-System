@@ -10,7 +10,7 @@ def test_validate_non_empty_str() -> None:
 
 def test_validate_non_empty_str_empty() -> None:
     """PE: Detección de strings vacíos o solo espacios."""
-    with pytest.raises(ValidationError, match="no puede estar vacío"):
+    with pytest.raises(ValidationError, match="es obligatorio"):
         validate_non_empty_str("   ", "Nombre")
 
 @pytest.mark.parametrize("invalid_str", [
@@ -33,8 +33,13 @@ def test_validate_phone_valid() -> None:
 ])
 def test_validate_phone_invalid(bad_phone: str) -> None:
     """PE/AVL: Teléfonos con formato incorrecto."""
-    with pytest.raises(ValidationError, match="formato de teléfono"):
-        validate_phone("98A")
+    with pytest.raises(ValidationError, match="Teléfono.*debe"):
+        validate_phone(bad_phone)
+
+def test_validate_phone_digits_only() -> None:
+    """PE: Teléfono con longitud correcta pero caracteres inválidos."""
+    with pytest.raises(ValidationError, match="solo dígitos"):
+        validate_phone("99988877A")
 
 def test_validate_price_bounds() -> None:
     """AVL: Verificación de precios positivos y límites mínimos."""

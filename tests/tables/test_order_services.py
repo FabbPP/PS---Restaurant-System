@@ -22,11 +22,13 @@ def test_create_dine_in_occupied_table_fails(order_service: OrderService, table_
     table = table_service.add_table()
     table_service.occupy_table(table.id)
     
-    with pytest.raises(Exception): # Dependiendo de tu impl. (ConflictError o similar)
+    # Refactorizado: Especificidad absoluta en la excepción para evitar falsos positivos
+    with pytest.raises(ConflictError, match="no está disponible"):
         order_service.create_dine_in_order(table.id)
 
-def test_create_delivery_order_requires_info(order_service: OrderService) -> None:
+def test_create_delivery_order_requires_info(order_service: OrderService, customer_service) -> None:
     """PE: Validación de requisitos para órdenes de Delivery."""
+    customer_service.add_customer("Juan", "999888777")
     # Caso Válido
     order = order_service.create_delivery_order(
         customer_id=1, 
@@ -115,3 +117,10 @@ def test_assign_table_logic(order_service: OrderService, table_service) -> None:
     dine_order = order_service.create_dine_in_order(table.id)
     with pytest.raises(ConflictError):
         order_service.assign_table(dine_order.id, table2.id)
+
+def test_cannot_change_state_on_closed_order(order_service: OrderService):
+    """Edge Case: Intentar manipular una orden que ya fue cerrada administrativamente."""
+    order = order_service.create_takeaway_order()
+    order.closed = True # Inyección manual de estado para forzar la regla de negocio
+    with pytest.raises(StateError, match="cerrada"):
+        order_service.change_state(order.id, OrderState.PREPARING)

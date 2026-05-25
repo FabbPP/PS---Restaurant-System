@@ -5,8 +5,8 @@ from __future__ import annotations
 import math
 from typing import Optional
 
-from exceptions.validation import ValidationError
-from validators.base import ensure
+from src.exceptions.validation import ValidationError
+from src.validators.base import ensure
 
 
 def _ensure_int(value: object, field_name: str) -> int:

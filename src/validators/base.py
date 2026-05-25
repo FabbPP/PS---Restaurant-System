@@ -2,7 +2,7 @@
 
 from typing import Iterable, TypeVar
 
-from exceptions.validation import ValidationError
+from src.exceptions.validation import ValidationError
 
 T = TypeVar("T")
 

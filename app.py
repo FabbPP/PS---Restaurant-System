@@ -9,16 +9,16 @@ SRC_PATH = os.path.join(CURRENT_DIR, "src")
 if SRC_PATH not in sys.path:
     sys.path.insert(0, SRC_PATH)
 
-from customers.repository import CustomerRepository  # noqa: E402
-from customers.services import CustomerService  # noqa: E402
-from delivery.services import DeliveryService  # noqa: E402
-from menu.controller import MenuController  # noqa: E402
-from orders.repository import OrderRepository  # noqa: E402
-from orders.services import OrderService  # noqa: E402
-from tables.repository import TableRepository  # noqa: E402
-from tables.services import TableService  # noqa: E402
-from waiters.repository import WaiterRepository  # noqa: E402
-from waiters.services import WaiterService  # noqa: E402
+from src.customers.repository import CustomerRepository  # noqa: E402
+from src.customers.services import CustomerService  # noqa: E402
+from src.delivery.services import DeliveryService  # noqa: E402
+from src.menu.controller import MenuController  # noqa: E402
+from src.orders.repository import OrderRepository  # noqa: E402
+from src.orders.services import OrderService  # noqa: E402
+from src.tables.repository import TableRepository  # noqa: E402
+from src.tables.services import TableService  # noqa: E402
+from src.waiters.repository import WaiterRepository  # noqa: E402
+from src.waiters.services import WaiterService  # noqa: E402
 
 
 def main() -> None:

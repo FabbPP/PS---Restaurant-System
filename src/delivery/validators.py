@@ -1,6 +1,6 @@
 """Delivery validators."""
 
-from validators.common import validate_non_empty_str, validate_phone
+from src.validators.common import validate_non_empty_str, validate_phone
 
 
 def validate_address(address: str) -> str:
