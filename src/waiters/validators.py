@@ -1,8 +1,12 @@
-"""Waiter validators."""
-
-from src.validators.common import validate_non_empty_str
-
+from src.exceptions.validation import ValidationError
 
 def validate_waiter_name(name: str) -> str:
-    """Validate waiter name."""
-    return validate_non_empty_str(name, "Nombre de mesero")
+    """
+    Valida que el nombre del mesero contenga únicamente letras y espacios.
+    """
+    # Verificamos si, al eliminar espacios, el contenido es puramente alfabético
+    if not name.replace(" ", "").isalpha():
+        raise ValidationError(
+            "El nombre del mesero solo debe contener letras y espacios."
+        )
+    return name

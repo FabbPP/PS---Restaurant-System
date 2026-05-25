@@ -21,6 +21,7 @@ from src.tables.services import TableService
 from src.utils.parsing import parse_decimal, parse_int
 from src.validators.common import validate_int_range, validate_non_empty_str
 from src.waiters.services import WaiterService
+from src.waiters.validators import validate_waiter_name
 from src.customers.services import CustomerService
 from src.delivery.services import DeliveryService
 
@@ -95,7 +96,9 @@ class MenuController:
     # ------------------------------------------------------------------ #
 
     def _add_waiter(self) -> None:
-        name = self._read_str("Nombre del mesero: ")
+        name = self._read_str(
+            "Nombre del mesero: ", validator=validate_waiter_name
+        )
         waiter = self._waiter_service.add_waiter(name)
         views.print_success(f"Mesero agregado con ID {waiter.id}.")
 
@@ -121,18 +124,33 @@ class MenuController:
 
     def _assign_table(self) -> None:
         """Assign a table to an existing dine-in order without one."""
-        # Show available tables for context
+        # A) Listado de Mesas Disponibles
         available = self._table_service.list_available_tables()
-        if available:
-            views.print_header("Mesas disponibles")
-            for table in available:
-                print(f"  [{table.id}] Libre")
-        else:
+        if not available:
             views.print_error("No hay mesas disponibles.")
             return
 
-        order_id = self._read_int("ID de orden: ", min_value=1)
-        table_id = self._read_int("ID de mesa: ", min_value=1)
+        views.print_header("Mesas disponibles")
+        for table in available:
+            # Se muestra ID y capacidad (con fallback seguro)
+            capacity = getattr(table, 'capacity', 'Estándar')
+            print(f"  [{table.id}] Libre - Capacidad: {capacity}")
+
+        # B) Listado de Órdenes Activas/Pendientes
+        orders = self._order_service.list_orders()
+        active_orders = [o for o in orders if not o.closed]
+
+        if active_orders:
+            views.print_header("Órdenes Activas/Pendientes")
+            for order in active_orders:
+                print(f"  [{order.id}] Estado: {order.state.value}")
+        else:
+            views.print_header("No hay órdenes activas.")
+
+        # Prompts claros según requerimiento UX
+        order_id = self._read_int("Ingrese el ID de la orden: ", min_value=1)
+        table_id = self._read_int("Ingrese el ID de la mesa a asignar: ", min_value=1)
+
         order = self._order_service.assign_table(order_id, table_id)
         views.print_success(
             f"Mesa {order.table_id} asignada a orden {order.id}."
@@ -292,7 +310,8 @@ class MenuController:
     # ------------------------------------------------------------------ #
 
     def _read_str(self, prompt: str, min_len: int = 1, max_len: int = 60,
-                  digits_only: bool = False) -> str:
+                  digits_only: bool = False,
+                  validator: Optional[Callable[[str], None]] = None) -> str:
         """Read a validated string from stdin, retrying on error."""
         while True:
             try:
@@ -307,6 +326,11 @@ class MenuController:
                     raise ValidationError(
                         "Entrada debe contener solo dígitos."
                     )
+
+                # Ejecutar validación lógica adicional si se requiere
+                if validator:
+                    validator(text)
+
                 return text
             except ValidationError as exc:
                 views.print_error(str(exc))
