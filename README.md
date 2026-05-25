@@ -106,13 +106,7 @@ pytest
 python3 -m pytest
 ```
 
-### Reporte de Cobertura Detallado
-Para verificar qué porcentaje del código está cubierto por pruebas:
-```bash
-pytest --cov=src --cov-report=term-missing
-```
-*Nota: El sistema mantiene una cobertura superior al 90% en lógica de negocio y servicios.*
-## 8. VALIDACIONES IMPLEMENTADAS Y MANEJO DE ERRORES
+## 7. VALIDACIONES IMPLEMENTADAS Y MANEJO DE ERRORES
 El sistema utiliza una jerarquía de excepciones personalizadas para garantizar la robustez:
 - **`ValidationError`**: Disparada por validators locales ante datos malformados (e.g., teléfonos con letras).
 - **`StateError`**: Previene transiciones ilegales en la Máquina de Estados (e.g., saltar de 'Pendiente' a 'Entregado').
@@ -121,13 +115,13 @@ El sistema utiliza una jerarquía de excepciones personalizadas para garantizar 
 
 Cada entrada es procesada a través de `validators.py` específicos por módulo antes de alcanzar la capa de servicio.
 
-## 9. ENFOQUE DE TESTING (PE Y AVL)
+## 8. ENFOQUE DE TESTING (PE Y AVL)
 Se ha aplicado **Black Box Testing** basado en metodologías formales de QA:
 - **Partición de Equivalencia (PE):** División de entradas en clases válidas e inválidas (e.g., cantidades permitidas [1, 99] vs negativas o superiores).
 - **Análisis de Valores Límite (AVL):** Pruebas exhaustivas en los bordes críticos (0, 1, 99, 100) para asegurar que no existan errores de "off-by-one".
 - **Tests Parametrizados:** Uso de `@pytest.mark.parametrize` para inyectar múltiples casos de prueba sobre una misma lógica de transición o cálculo.
 
-## 10. RESTRICCIONES, FLUJO Y DECISIONES TÉCNICAS
+## 9. RESTRICCIONES, FLUJO Y DECISIONES TÉCNICAS
 - **Precisión Financiera:** Se descartó el uso de `float` debido al error IEEE 754. Toda operación monetaria utiliza `Decimal` para garantizar que `0.1 + 0.2` sea exactamente `0.3`.
 - **Inmutabilidad Post-Cierre:** Una vez que una orden es marcada como `closed`, el sistema bloquea cualquier adición de ítems o cambio de estado, preservando la integridad histórica de la transacción.
 - **Parsing Robusto:** Mediante `utils/parsing.py`, el sistema intercepta datos corruptos o "basura" en la consola, solicitando reingreso sin provocar la caída del proceso (`Exception handling` preventivo).
