@@ -2,10 +2,10 @@
 
 from typing import List
 
-from exceptions.domain import ConflictError
-from tables.models import Table
-from tables.repository import TableRepository
-from tables.validators import validate_table_id
+from src.exceptions.domain import ConflictError
+from src.tables.models import Table
+from src.tables.repository import TableRepository
+from src.tables.validators import validate_table_id
 
 
 class TableService:

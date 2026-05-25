@@ -3,7 +3,7 @@
 from enum import Enum
 from typing import Dict, Set
 
-from exceptions.domain import StateError
+from src.exceptions.domain import StateError
 
 
 class OrderState(str, Enum):

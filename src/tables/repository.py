@@ -2,9 +2,9 @@
 
 from typing import Dict, List
 
-from exceptions.domain import ConflictError, NotFoundError
-from tables.models import Table
-from utils.id_generator import IdGenerator
+from src.exceptions.domain import ConflictError, NotFoundError
+from src.tables.models import Table
+from src.utils.id_generator import IdGenerator
 
 
 class TableRepository:

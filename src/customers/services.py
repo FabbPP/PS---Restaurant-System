@@ -2,9 +2,9 @@
 
 from typing import List
 
-from customers.models import DeliveryCustomer
-from customers.repository import CustomerRepository
-from customers.validators import validate_customer_name, validate_customer_phone
+from src.customers.models import DeliveryCustomer
+from src.customers.repository import CustomerRepository
+from src.customers.validators import validate_customer_name, validate_customer_phone
 
 
 class CustomerService:

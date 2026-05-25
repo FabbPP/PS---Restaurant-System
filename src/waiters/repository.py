@@ -2,9 +2,9 @@
 
 from typing import Dict, List
 
-from exceptions.domain import ConflictError, NotFoundError
-from utils.id_generator import IdGenerator
-from waiters.models import Waiter
+from src.exceptions.domain import ConflictError, NotFoundError
+from src.utils.id_generator import IdGenerator
+from src.waiters.models import Waiter
 
 
 class WaiterRepository:

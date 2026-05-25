@@ -2,9 +2,9 @@
 
 from typing import Dict, List
 
-from exceptions.domain import ConflictError, NotFoundError
-from customers.models import DeliveryCustomer
-from utils.id_generator import IdGenerator
+from src.exceptions.domain import ConflictError, NotFoundError
+from src.customers.models import DeliveryCustomer
+from src.utils.id_generator import IdGenerator
 
 
 class CustomerRepository:

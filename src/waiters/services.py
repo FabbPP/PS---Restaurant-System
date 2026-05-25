@@ -2,9 +2,9 @@
 
 from typing import List
 
-from waiters.models import Waiter
-from waiters.repository import WaiterRepository
-from waiters.validators import validate_waiter_name
+from src.waiters.models import Waiter
+from src.waiters.repository import WaiterRepository
+from src.waiters.validators import validate_waiter_name
 
 
 class WaiterService:
