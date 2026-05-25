@@ -63,12 +63,3 @@ El presente documento detalla la estrategia de validación técnica del **PS---R
 | TC-5.07 | `test_parse_decimal_invalid` (p2) | Rechazo de valor no finito (Inf) | Robustez | "inf" | ValidationError | PASSED |
 | TC-5.08 | `test_parse_extreme_overflow` | Protección contra DoS (String largo) | Robustez | "9" * 1001 | ValidationError | PASSED |
 
-## 3. RESUMEN MÉTRICO DE EJECUCIÓN
-----
-La ejecución de la suite de pruebas se realizó mediante el comando `pytest --cov=src` en un entorno virtual aislado, obteniendo los siguientes resultados finales:
-
-| Métrica | Valor |
-| :--- | :--- |
-| **Total de casos ejecutados** | 99 |
-| **Total de casos exitosos** | 99 |
-| **Porcentaje de éxito (Pass Rate)** | 100% |
