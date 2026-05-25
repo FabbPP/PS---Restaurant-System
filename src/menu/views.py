@@ -2,9 +2,9 @@
 
 from typing import Iterable, List
 
-from orders.models import Order
-from tables.models import Table
-from waiters.models import Waiter
+from src.orders.models import Order
+from src.tables.models import Table
+from src.waiters.models import Waiter
 
 
 def print_header(title: str) -> None:

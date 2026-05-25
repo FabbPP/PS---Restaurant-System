@@ -3,9 +3,7 @@
 from __future__ import annotations
 
 import math
-
-from exceptions.validation import ValidationError
-
+from src.exceptions.validation import ValidationError
 
 def parse_int(value: object, field_name: str) -> int:
     """Parse an integer from text or integer input."""
