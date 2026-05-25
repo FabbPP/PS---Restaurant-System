@@ -1,12 +1,13 @@
 """Order services (use cases)."""
 
-from typing import List
+from typing import List, Optional
 
 from delivery.services import DeliveryService
 from exceptions.domain import ConflictError, StateError
 from orders.models import Order, OrderItem, OrderType
 from orders.repository import OrderRepository
 from orders.states import OrderState
+from orders.validators import validate_state_value
 from tables.services import TableService
 from validators.common import validate_id
 
@@ -30,15 +31,20 @@ class OrderService:
         valid_id = validate_id(order_id, "ID de orden")
         return self._repository.get(valid_id)
 
-    def create_dine_in_order(self, table_id: int) -> Order:
-        """Create a dine-in order for a table."""
-        valid_table_id = validate_id(table_id, "ID de mesa")
-        self._table_service.ensure_available(valid_table_id)
+    def create_dine_in_order(self, table_id: Optional[int] = None) -> Order:
+        """Create a dine-in order, optionally assigning a table."""
+        valid_table_id: Optional[int] = None
+        if table_id is not None:
+            valid_table_id = validate_id(table_id, "ID de mesa")
+            self._table_service.ensure_available(valid_table_id)
+
         order_id = self._repository.next_id()
         order = Order(id=order_id, order_type=OrderType.DINE_IN,
                       table_id=valid_table_id)
         self._repository.add(order)
-        self._table_service.occupy_table(valid_table_id)
+
+        if valid_table_id is not None:
+            self._table_service.occupy_table(valid_table_id)
         return order
 
     def create_takeaway_order(self) -> Order:
@@ -63,10 +69,15 @@ class OrderService:
     def assign_table(self, order_id: int, table_id: int) -> Order:
         """Assign a table to an existing dine-in order."""
         order = self.get_order(order_id)
+        if order.closed:
+            raise StateError("No se puede asignar mesa a una orden cerrada.")
         if order.order_type != OrderType.DINE_IN:
             raise StateError("Solo las órdenes de mesa pueden asignar mesa.")
+        if order.state != OrderState.PENDING:
+            raise StateError("Solo se puede asignar mesa a una orden pendiente.")
         if order.table_id is not None:
             raise ConflictError("La orden ya tiene una mesa asignada.")
+
         valid_table_id = validate_id(table_id, "ID de mesa")
         self._table_service.ensure_available(valid_table_id)
         order.table_id = valid_table_id
@@ -83,8 +94,9 @@ class OrderService:
 
     def change_state(self, order_id: int, new_state: OrderState) -> Order:
         """Change order state."""
+        valid_state = validate_state_value(new_state)
         order = self.get_order(order_id)
-        order.set_state(new_state)
+        order.set_state(valid_state)
         return order
 
     def close_order(self, order_id: int) -> Order:
@@ -96,6 +108,7 @@ class OrderService:
             raise StateError("Solo se puede cerrar una orden finalizada.")
         if order.state == OrderState.DELIVERED and not order.items:
             raise StateError("No se puede cerrar una orden sin ítems.")
+
         order.closed = True
         if order.order_type == OrderType.DINE_IN and order.table_id is not None:
             self._table_service.release_table(order.table_id)

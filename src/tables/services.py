@@ -22,6 +22,11 @@ class TableService:
         """List all tables."""
         return self._repository.list_all()
 
+    def list_available_tables(self) -> List[Table]:
+        """List only available tables."""
+        return [table for table in self._repository.list_all()
+                if table.is_available]
+
     def get_table(self, table_id: int) -> Table:
         """Get a table by ID."""
         validate_table_id(table_id)

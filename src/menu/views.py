@@ -1,6 +1,6 @@
 """Console views for rendering output."""
 
-from typing import Iterable
+from typing import Iterable, List
 
 from orders.models import Order
 from tables.models import Table
@@ -28,37 +28,52 @@ def show_main_menu() -> None:
     print("1. Añadir mesero")
     print("2. Listar meseros")
     print("3. Añadir mesa")
-    print("4. Asignar mesa a orden")
-    print("5. Crear orden mesa")
-    print("6. Crear orden delivery")
-    print("7. Crear orden llevar")
-    print("8. Cambiar estado de orden")
-    print("9. Cerrar orden")
-    print("10. Ver órdenes")
-    print("11. Calcular total de orden")
-    print("12. Listar mesas")
+    print("4. Asignar mesa")
+    print("5. Crear orden")
+    print("6. Pedido mesa")
+    print("7. Pedido delivery")
+    print("8. Pedido para llevar")
+    print("9. Cambiar estado")
+    print("10. Cerrar orden")
+    print("11. Ver órdenes")
+    print("12. Calcular total")
     print("0. Salir")
 
 
 def show_waiters(waiters: Iterable[Waiter]) -> None:
     """Display a list of waiters."""
+    waiter_list: List[Waiter] = list(waiters)
     print_header("Meseros")
-    for waiter in waiters:
+    if not waiter_list:
+        print("No hay meseros registrados.")
+        return
+
+    for waiter in waiter_list:
         print(f"- [{waiter.id}] {waiter.name}")
 
 
 def show_tables(tables: Iterable[Table]) -> None:
     """Display a list of tables."""
+    table_list: List[Table] = list(tables)
     print_header("Mesas")
-    for table in tables:
+    if not table_list:
+        print("No hay mesas registradas.")
+        return
+
+    for table in table_list:
         status = "Libre" if table.is_available else "Ocupada"
         print(f"- [{table.id}] {status}")
 
 
 def show_orders(orders: Iterable[Order]) -> None:
     """Display a list of orders."""
+    order_list: List[Order] = list(orders)
     print_header("Órdenes")
-    for order in orders:
+    if not order_list:
+        print("No hay órdenes registradas.")
+        return
+
+    for order in order_list:
         table_info = f"Mesa {order.table_id}" if order.table_id else "Sin mesa"
         total = order.total()
         closed = "Cerrada" if order.closed else "Abierta"

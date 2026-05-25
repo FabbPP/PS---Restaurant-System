@@ -6,11 +6,15 @@ from orders.states import OrderState
 from validators.base import ensure_in
 
 
-def parse_order_type(value: str) -> OrderType:
+def parse_order_type(value: object) -> OrderType:
     """Parse order type from text."""
-    if value is None:
-        raise ValidationError("Tipo de orden es obligatorio.")
+    if not isinstance(value, str):
+        raise ValidationError("Tipo de orden debe ser texto.")
+
     text = value.strip().lower()
+    if text == "":
+        raise ValidationError("Tipo de orden es obligatorio.")
+
     mapping = {
         "mesa": OrderType.DINE_IN,
         "llevar": OrderType.TAKEAWAY,
@@ -21,11 +25,15 @@ def parse_order_type(value: str) -> OrderType:
     return mapping[text]
 
 
-def parse_order_state(value: str) -> OrderState:
+def parse_order_state(value: object) -> OrderState:
     """Parse order state from text."""
-    if value is None:
-        raise ValidationError("Estado es obligatorio.")
+    if not isinstance(value, str):
+        raise ValidationError("Estado debe ser texto.")
+
     text = value.strip().lower()
+    if text == "":
+        raise ValidationError("Estado es obligatorio.")
+
     for state in OrderState:
         if state.value == text:
             return state
