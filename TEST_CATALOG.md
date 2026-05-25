@@ -5,7 +5,7 @@ El presente documento detalla la estrategia de validación técnica del **PS---R
 
 ## 2. MATRICES DE PRUEBAS POR MÓDULO (PE + AVL REALES)
 
-### 2.1. Módulo de Gestión de Meseros (`tests/waiters/`)
+### 2.1. Módulo de Gestión de Meseros 
 | ID | Nombre del Test / Función Real | Descripción del Caso | Técnica | Datos de Entrada Simulados | Resultado Esperado | Estado |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 | TC-1.01 | `test_waiter_name_valid` | Validar nombre alfabético con espacios | PE | "Juan Perez" | Éxito (str) | PASSED |
@@ -17,7 +17,7 @@ El presente documento detalla la estrategia de validación técnica del **PS---R
 | TC-1.07 | `test_waiter_name_boundary_limits` | Validar límite superior exacto | AVL | "M" * 60 | Éxito (len=60) | PASSED |
 | TC-1.08 | `test_add_waiter` | Integración: Creación vía servicio | PE | "Ramon" | Objeto Waiter | PASSED |
 
-### 2.2. Módulo de Servicios de Orden (`tests/tables/test_order_services.py`)
+### 2.2. Módulo de Servicios de Orden 
 | ID | Nombre del Test / Función Real | Descripción del Caso | Técnica | Datos de Entrada Simulados | Resultado Esperado | Estado |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 | TC-2.01 | `test_create_dine_in_order_flow` | Abrir orden en mesa y ocupar recurso | PE | table_id=1 | is_available=False | PASSED |
@@ -32,15 +32,15 @@ El presente documento detalla la estrategia de validación técnica del **PS---R
 | TC-2.10 | `test_assign_table_logic` | Restringir mesas a órdenes Dine-In | PE | Takeaway + MesaID | StateError | PASSED |
 | TC-2.11 | `test_cannot_change_state_on_closed_order`| Blindaje de órdenes cerradas | PE | closed=True | StateError | PASSED |
 
-### 2.3. Módulo de Validadores de Orden (`tests/orders/test_order_validators.py`)
+### 2.3. Módulo de Validadores de Orden
 | ID | Nombre del Test / Función Real | Descripción del Caso | Técnica | Datos de Entrada Simulados | Resultado Esperado | Estado |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 | TC-3.01 | `test_parse_order_state_valid` | Normalización de estados (mayúsculas) | PE | "PREPARANDO" | OrderState.PREPARING| PASSED |
 | TC-3.02 | `test_parse_order_state_invalid` | Rechazo de estados inexistentes | PE | "cocinando" | ValidationError | PASSED |
-| TC-3.03 | `test_validate_order_item_logic_paths`| Validar precisión mínima de precio | AVL | price=0.01 | Éxito (Decimal) | PASSED |
-| TC-3.04 | `test_validate_order_item_logic_paths`| Rechazo de ítems con nombre vacío | PE | name="   " | ValidationError | PASSED |
+| TC-3.03 | `test_validate_order_item_price_boundary`| Validar precisión mínima de precio | AVL | price=0.01 | Éxito (Decimal) | PASSED |
+| TC-3.04 | `test_validate_order_item_empty_name`| Rechazo de ítems con nombre vacío | PE | name="   " | ValidationError | PASSED |
 
-### 2.4. Módulo de Clientes y Delivery (`tests/customers/`)
+### 2.4. Módulo de Clientes y Delivery
 | ID | Nombre del Test / Función Real | Descripción del Caso | Técnica | Datos de Entrada Simulados | Resultado Esperado | Estado |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 | TC-4.01 | `test_menu_exit_option` | Salida segura del sistema | PE | "0" | Break Loop | PASSED |
@@ -51,7 +51,7 @@ El presente documento detalla la estrategia de validación técnica del **PS---R
 | TC-4.06 | `test_delivery_info_invalid_phone` | Rechazo de teléfonos cortos | AVL | "12345678" | ValidationError | PASSED |
 | TC-4.07 | `test_customer_invalid_phones` (p1) | Rechazo de teléfono con letras | PE | "999-ABC" | ValidationError | PASSED |
 
-### 2.5. Módulo de Utilidades y Robustez (`tests/utils/test_parsing.py`)
+### 2.5. Módulo de Utilidades y Robustez 
 | ID | Nombre del Test / Función Real | Descripción del Caso | Técnica | Datos de Entrada Simulados | Resultado Esperado | Estado |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 | TC-5.01 | `test_parse_int_valid` | Limpieza de espacios en enteros | PE | "  5  " | 5 (int) | PASSED |
@@ -62,4 +62,3 @@ El presente documento detalla la estrategia de validación técnica del **PS---R
 | TC-5.06 | `test_parse_decimal_invalid` (p1) | Rechazo de valor no finito (NaN) | Robustez | "nan" | ValidationError | PASSED |
 | TC-5.07 | `test_parse_decimal_invalid` (p2) | Rechazo de valor no finito (Inf) | Robustez | "inf" | ValidationError | PASSED |
 | TC-5.08 | `test_parse_extreme_overflow` | Protección contra DoS (String largo) | Robustez | "9" * 1001 | ValidationError | PASSED |
-
