@@ -1,5 +1,5 @@
-from waiters.repository import WaiterRepository
-from waiters.services import WaiterService
+from src.waiters.repository import WaiterRepository
+from src.waiters.services import WaiterService
 
 
 def test_add_waiter() -> None:

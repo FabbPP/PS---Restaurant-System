@@ -1,4 +1,4 @@
-from waiters.models import Waiter
+from src.waiters.models import Waiter
 
 
 def test_waiter_name_normalization() -> None:
